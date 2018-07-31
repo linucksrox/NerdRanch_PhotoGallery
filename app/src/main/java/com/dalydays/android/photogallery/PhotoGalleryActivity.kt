@@ -1,12 +1,10 @@
 package com.dalydays.android.photogallery
 
-import android.support.v7.app.AppCompatActivity
-import android.os.Bundle
+import android.support.v4.app.Fragment
 
-class PhotoGalleryActivity : AppCompatActivity() {
+class PhotoGalleryActivity : SingleFragmentActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_photo_gallery)
+    override fun createFragment(): Fragment {
+        return PhotoGalleryFragment.newInstance()
     }
 }
