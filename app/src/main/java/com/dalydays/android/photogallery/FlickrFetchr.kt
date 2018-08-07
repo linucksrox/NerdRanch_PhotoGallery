@@ -18,15 +18,16 @@ class FlickrFetchr {
                 throw IOException(connection.responseMessage + ": with " + urlSpec)
             }
 
-            var bytesRead = 0
+            var bytesRead: Int
             val buffer = ByteArray(1024)
 
             bytesRead = inStream.read(buffer)
             while (bytesRead > 0) {
-                bytesRead = inStream.read(buffer)
                 outStream.write(buffer, 0, bytesRead)
+                bytesRead = inStream.read(buffer)
             }
             outStream.close()
+
             return outStream.toByteArray()
         } finally {
             connection.disconnect()
