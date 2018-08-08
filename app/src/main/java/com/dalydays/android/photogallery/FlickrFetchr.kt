@@ -6,6 +6,11 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 class FlickrFetchr {
+
+    fun getUrlString(urlSpec: String): String {
+        return String(getUrlBytes(urlSpec))
+    }
+
     fun getUrlBytes(urlSpec: String): ByteArray {
         val url = URL(urlSpec)
         val connection = url.openConnection() as HttpURLConnection
