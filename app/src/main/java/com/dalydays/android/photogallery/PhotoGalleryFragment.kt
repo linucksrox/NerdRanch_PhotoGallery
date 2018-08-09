@@ -24,6 +24,7 @@ class PhotoGalleryFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         retainInstance = true
+        FetchItemsTask().execute()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -35,9 +36,10 @@ class PhotoGalleryFragment : Fragment() {
     }
 
     class FetchItemsTask : AsyncTask<Void, Void, Void>() {
+
         override fun doInBackground(vararg params: Void?): Void? {
             try {
-                val result = FlickrFetchr().getUrlString("https://www.bignerdranch.com")
+                val result = FlickrFetchr().getUrlString("http://blog.dalydays.com")
 
                 Log.i(TAG, "Fetched contents of URL: $result")
             } catch (ioe: IOException) {
