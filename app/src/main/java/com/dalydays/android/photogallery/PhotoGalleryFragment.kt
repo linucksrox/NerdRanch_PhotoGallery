@@ -1,5 +1,6 @@
 package com.dalydays.android.photogallery
 
+import android.content.Context
 import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -12,7 +13,7 @@ import android.view.ViewGroup
 class PhotoGalleryFragment : Fragment() {
 
     companion object {
-        private val TAG = "PhotoGalleryFragment"
+        private const val TAG = "PhotoGalleryFragment"
 
         fun newInstance(): PhotoGalleryFragment {
             return PhotoGalleryFragment()
@@ -22,7 +23,7 @@ class PhotoGalleryFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         retainInstance = true
-        FetchItemsTask().execute()
+        FetchItemsTask().execute(activity)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -35,8 +36,8 @@ class PhotoGalleryFragment : Fragment() {
 
     class FetchItemsTask : AsyncTask<Void, Void, Void>() {
 
-        override fun doInBackground(vararg params: Void?): Void? {
-            FlickrFetchr().fetchItems()
+        override fun doInBackground(vararg params: Context): Void? {
+            FlickrFetchr(params[0]).fetchItems()
             return null
         }
 

@@ -1,18 +1,20 @@
 package com.dalydays.android.photogallery
 
+import android.content.Context
+import android.content.res.Resources
 import android.net.Uri
 import android.util.Log
+import org.json.JSONException
+import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.URL
 
-class FlickrFetchr {
+class FlickrFetchr(private var context: Context) {
 
     companion object {
-        private val TAG = "FlickrFetchr"
-        // Store the api key in a private.xml values file and don't track it in git
-        private const val API_KEY = R.string.api_key.toString()
+        private const val TAG = "FlickrFetchr"
     }
 
     fun getUrlString(urlSpec: String): String {
@@ -21,19 +23,26 @@ class FlickrFetchr {
 
     fun fetchItems() {
         try {
+
             val url = Uri.parse("https://api.flickr.com/services/rest/")
                     .buildUpon()
                     .appendQueryParameter("method", "flickr.photos.getRecent")
-                    .appendQueryParameter("api_key", API_KEY)
+                    // Store the api key in a private.xml values file and don't track it in git
+                    .appendQueryParameter("api_key", context.getString(R.string.api_key))
                     .appendQueryParameter("format", "json")
                     .appendQueryParameter("nojsoncallback", "1")
                     .appendQueryParameter("extras", "url_s")
                     .build().toString()
             val jsonString = getUrlString(url)
+            Log.d(TAG, url)
 
             Log.i(TAG, "Received JSON: $jsonString")
+
+            val jsonBody = JSONObject(jsonString)
         } catch (ioe: IOException) {
             Log.e(TAG, "Failed to fetch items", ioe)
+        } catch (je: JSONException) {
+            Log.e(TAG, "Failed to parse JSON", je)
         }
     }
 
