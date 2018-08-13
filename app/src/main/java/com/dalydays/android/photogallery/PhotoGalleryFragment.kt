@@ -30,7 +30,7 @@ class PhotoGalleryFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_photo_gallery, container, false)
         val mPhotoRecyclerView = v.findViewById<RecyclerView>(R.id.photo_recycler_view)
-        mPhotoRecyclerView.layoutManager = GridLayoutManager(activity, 3)
+        mPhotoRecyclerView.layoutManager = GridLayoutManager(context, 3)
 
         return v
     }

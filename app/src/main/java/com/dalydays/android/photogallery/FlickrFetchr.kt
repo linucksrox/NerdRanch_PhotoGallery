@@ -53,16 +53,16 @@ class FlickrFetchr(private var apiKey: String) {
         val photosJsonObject = jsonBody.getJSONObject("photos")
         val photosJsonArray = photosJsonObject.getJSONArray("photo")
 
-        for (i in 0..photosJsonArray.length()) {
+        for (i in 0..(photosJsonArray.length() - 1)) {
             val photoJsonObject = photosJsonArray.getJSONObject(i)
 
             val item = GalleryItem(photoJsonObject.getString("id"), photoJsonObject.getString("title"))
 
-            if (!photosJsonObject.has("url_s")) {
+            if (!photoJsonObject.has("url_s")) {
                 continue
             }
 
-            item.url = photosJsonObject.getString("url_s")
+            item.url = photoJsonObject.getString("url_s")
             items.add(item)
         }
     }
