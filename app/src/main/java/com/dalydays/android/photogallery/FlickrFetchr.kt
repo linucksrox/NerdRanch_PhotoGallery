@@ -1,7 +1,5 @@
 package com.dalydays.android.photogallery
 
-import android.content.Context
-import android.content.res.Resources
 import android.net.Uri
 import android.util.Log
 import org.json.JSONException
@@ -11,7 +9,7 @@ import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.URL
 
-class FlickrFetchr(private var context: Context) {
+class FlickrFetchr(private var apiKey: String) {
 
     companion object {
         private const val TAG = "FlickrFetchr"
@@ -27,8 +25,7 @@ class FlickrFetchr(private var context: Context) {
             val url = Uri.parse("https://api.flickr.com/services/rest/")
                     .buildUpon()
                     .appendQueryParameter("method", "flickr.photos.getRecent")
-                    // Store the api key in a private.xml values file and don't track it in git
-                    .appendQueryParameter("api_key", context.getString(R.string.api_key))
+                    .appendQueryParameter("api_key", apiKey)
                     .appendQueryParameter("format", "json")
                     .appendQueryParameter("nojsoncallback", "1")
                     .appendQueryParameter("extras", "url_s")

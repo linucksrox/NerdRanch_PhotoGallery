@@ -23,7 +23,9 @@ class PhotoGalleryFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         retainInstance = true
-        FetchItemsTask().execute(activity)
+        // Store the api key in a private.xml values file and don't track it in git
+        val apiKey = getString(R.string.api_key)
+        FetchItemsTask(apiKey).execute()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -34,10 +36,10 @@ class PhotoGalleryFragment : Fragment() {
         return v
     }
 
-    class FetchItemsTask : AsyncTask<Void, Void, Void>() {
+    class FetchItemsTask(private val apiKey: String) : AsyncTask<Void, Void, Void>() {
 
-        override fun doInBackground(vararg params: Context): Void? {
-            FlickrFetchr(params[0]).fetchItems()
+        override fun doInBackground(vararg params: Void): Void? {
+            FlickrFetchr(apiKey).fetchItems()
             return null
         }
 
