@@ -12,7 +12,7 @@ class FlickrFetchr {
     companion object {
         private val TAG = "FlickrFetchr"
         // Store the api key in a private.xml values file and don't track it in git
-        private val API_KEY = R.string.api_key.toString()
+        private const val API_KEY = R.string.api_key.toString()
     }
 
     fun getUrlString(urlSpec: String): String {
