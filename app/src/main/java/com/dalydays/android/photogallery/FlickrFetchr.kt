@@ -19,9 +19,11 @@ class FlickrFetchr(private var apiKey: String) {
         return String(getUrlBytes(urlSpec))
     }
 
-    fun fetchItems() {
-        try {
+    fun fetchItems(): List<GalleryItem> {
 
+        val items = ArrayList<GalleryItem>()
+
+        try {
             val url = Uri.parse("https://api.flickr.com/services/rest/")
                     .buildUpon()
                     .appendQueryParameter("method", "flickr.photos.getRecent")
@@ -36,10 +38,32 @@ class FlickrFetchr(private var apiKey: String) {
             Log.i(TAG, "Received JSON: $jsonString")
 
             val jsonBody = JSONObject(jsonString)
+            parseItems(items, jsonBody)
         } catch (ioe: IOException) {
             Log.e(TAG, "Failed to fetch items", ioe)
         } catch (je: JSONException) {
             Log.e(TAG, "Failed to parse JSON", je)
+        }
+
+        return items
+    }
+
+    @Throws(IOException::class, JSONException::class)
+    fun parseItems(items: MutableList<GalleryItem>, jsonBody: JSONObject) {
+        val photosJsonObject = jsonBody.getJSONObject("photos")
+        val photosJsonArray = photosJsonObject.getJSONArray("photo")
+
+        for (i in 0..photosJsonArray.length()) {
+            val photoJsonObject = photosJsonArray.getJSONObject(i)
+
+            val item = GalleryItem(photoJsonObject.getString("id"), photoJsonObject.getString("title"))
+
+            if (!photosJsonObject.has("url_s")) {
+                continue
+            }
+
+            item.url = photosJsonObject.getString("url_s")
+            items.add(item)
         }
     }
 

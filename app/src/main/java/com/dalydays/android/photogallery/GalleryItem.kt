@@ -1,6 +1,6 @@
 package com.dalydays.android.photogallery
 
-data class GalleryItem(val caption: String, val id: String, val url: String) {
+data class GalleryItem(var caption: String = "", var id: String = "", var url: String = "") {
 
     override fun toString(): String {
         return caption
