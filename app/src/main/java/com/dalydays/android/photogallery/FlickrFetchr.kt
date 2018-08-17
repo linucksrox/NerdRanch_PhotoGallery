@@ -15,7 +15,7 @@ class FlickrFetchr(private var apiKey: String) {
         private const val TAG = "FlickrFetchr"
     }
 
-    fun getUrlString(urlSpec: String): String {
+    private fun getUrlString(urlSpec: String): String {
         return String(getUrlBytes(urlSpec))
     }
 
@@ -67,7 +67,7 @@ class FlickrFetchr(private var apiKey: String) {
         }
     }
 
-    fun getUrlBytes(urlSpec: String): ByteArray {
+    private fun getUrlBytes(urlSpec: String): ByteArray {
         val url = URL(urlSpec)
         val connection = url.openConnection() as HttpURLConnection
 

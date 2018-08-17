@@ -8,6 +8,8 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import java.util.ArrayList
 
 class PhotoGalleryFragment : Fragment() {
 
@@ -19,6 +21,9 @@ class PhotoGalleryFragment : Fragment() {
         }
     }
 
+    private lateinit var mPhotoRecyclerView: RecyclerView
+    var mItems = ArrayList<GalleryItem>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         retainInstance = true
@@ -29,18 +34,56 @@ class PhotoGalleryFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_photo_gallery, container, false)
-        val mPhotoRecyclerView = v.findViewById<RecyclerView>(R.id.photo_recycler_view)
+        mPhotoRecyclerView = v.findViewById(R.id.photo_recycler_view)
         mPhotoRecyclerView.layoutManager = GridLayoutManager(context, 3)
+
+        setupAdapter()
 
         return v
     }
 
-    class FetchItemsTask(private val apiKey: String) : AsyncTask<Void, Void, Void>() {
+    private fun setupAdapter() {
+        if (isAdded) {
+            mPhotoRecyclerView.adapter = PhotoAdapter(mItems)
+        }
+    }
 
-        override fun doInBackground(vararg params: Void): Void? {
-            FlickrFetchr(apiKey).fetchItems()
-            return null
+    private inner class PhotoHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val mTitleTextView = itemView as TextView
+
+        fun bindGalleryItem(item: GalleryItem) {
+            mTitleTextView.text = item.toString()
+        }
+    }
+
+    private inner class PhotoAdapter(galleryItems: List<GalleryItem>) : RecyclerView.Adapter<PhotoHolder>() {
+        private val mGalleryItems = galleryItems
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PhotoHolder {
+            val textView = TextView(activity)
+            return PhotoHolder(textView)
         }
 
+        override fun onBindViewHolder(holder: PhotoHolder, position: Int) {
+            val galleryItem = mGalleryItems[position]
+            holder.bindGalleryItem(galleryItem)
+        }
+
+        override fun getItemCount(): Int {
+            return mGalleryItems.size
+        }
     }
+
+    private inner class FetchItemsTask(private val apiKey: String) : AsyncTask<Void, Void, List<GalleryItem>>() {
+
+        override fun doInBackground(vararg params: Void): List<GalleryItem> {
+            return FlickrFetchr(apiKey).fetchItems()
+        }
+
+        override fun onPostExecute(result: List<GalleryItem>) {
+            mItems = result as ArrayList<GalleryItem>
+            setupAdapter()
+        }
+
+    } 
 }
