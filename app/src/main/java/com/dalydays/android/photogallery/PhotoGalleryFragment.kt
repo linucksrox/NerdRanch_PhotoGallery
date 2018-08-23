@@ -85,5 +85,5 @@ class PhotoGalleryFragment : Fragment() {
             setupAdapter()
         }
 
-    } 
+    }
 }
