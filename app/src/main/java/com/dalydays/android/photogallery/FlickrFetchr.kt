@@ -2,6 +2,7 @@ package com.dalydays.android.photogallery
 
 import android.net.Uri
 import android.util.Log
+import com.google.gson.Gson
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
@@ -21,7 +22,7 @@ class FlickrFetchr(private var apiKey: String) {
 
     fun fetchItems(): List<GalleryItem> {
 
-        val items = ArrayList<GalleryItem>()
+        var items = ArrayList<GalleryItem>()
 
         try {
             val url = Uri.parse("https://api.flickr.com/services/rest/")
@@ -38,7 +39,7 @@ class FlickrFetchr(private var apiKey: String) {
             Log.i(TAG, "Received JSON: $jsonString")
 
             val jsonBody = JSONObject(jsonString)
-            parseItems(items, jsonBody)
+            items = parseItems(jsonBody)
         } catch (ioe: IOException) {
             Log.e(TAG, "Failed to fetch items", ioe)
         } catch (je: JSONException) {
@@ -49,22 +50,9 @@ class FlickrFetchr(private var apiKey: String) {
     }
 
     @Throws(IOException::class, JSONException::class)
-    fun parseItems(items: MutableList<GalleryItem>, jsonBody: JSONObject) {
-        val photosJsonObject = jsonBody.getJSONObject("photos")
-        val photosJsonArray = photosJsonObject.getJSONArray("photo")
-
-        for (i in 0..(photosJsonArray.length() - 1)) {
-            val photoJsonObject = photosJsonArray.getJSONObject(i)
-
-            val item = GalleryItem(photoJsonObject.getString("id"), photoJsonObject.getString("title"))
-
-            if (!photoJsonObject.has("url_s")) {
-                continue
-            }
-
-            item.url = photoJsonObject.getString("url_s")
-            items.add(item)
-        }
+    fun parseItems(jsonBody: JSONObject): ArrayList<GalleryItem> {
+        val gsonResult = Gson().fromJson<FlickrResult>(jsonBody.toString(), FlickrResult::class.java)
+        return gsonResult.photos.photoList
     }
 
     private fun getUrlBytes(urlSpec: String): ByteArray {
