@@ -37,6 +37,19 @@ class PhotoGalleryFragment : Fragment() {
         mPhotoRecyclerView = v.findViewById(R.id.photo_recycler_view)
         mPhotoRecyclerView.layoutManager = GridLayoutManager(context, 3)
 
+        // Add onScrollListener to check if we're at the end of the list so we can load the next page
+        mPhotoRecyclerView.addOnScrollListener(object: RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+                // TODO: figure out what the actual last item index is
+                val lastItemIndex = 100
+
+                if (recyclerView?.layoutManager?.getChildAt(lastItemIndex)?.visibility == View.VISIBLE) {
+                    // TODO: if the last item is visible, then load the next page here
+
+                }
+            }
+        })
+
         setupAdapter()
 
         return v
