@@ -40,11 +40,12 @@ class PhotoGalleryFragment : Fragment() {
         // Add onScrollListener to check if we're at the end of the list so we can load the next page
         mPhotoRecyclerView.addOnScrollListener(object: RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
-                // TODO: figure out what the actual last item index is
-                val lastItemIndex = 100
+                val lastItemIndex = recyclerView?.layoutManager?.itemCount!! - 1
 
-                if (recyclerView?.layoutManager?.getChildAt(lastItemIndex)?.visibility == View.VISIBLE) {
-                    // TODO: if the last item is visible, then load the next page here
+                if (recyclerView.layoutManager?.getChildAt(lastItemIndex)?.visibility == View.VISIBLE) {
+                    FetchItemsTask(getString(R.string.api_key)).execute()
+
+                    // TODO: Figure out which page to request, and don't request a page if we know it doesn't exist
 
                 }
             }
